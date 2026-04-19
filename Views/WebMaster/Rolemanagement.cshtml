@@ -1,0 +1,141 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Role Management | PAS";
+}
+@model List<Microsoft.AspNetCore.Identity.IdentityRole>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo"><i class="fas fa-server"></i><span>PAS | WebMaster Portal</span></div>
+            <div class="user-info">
+                <a href="/Auth/Logout" style="color:white; background:rgba(255,255,255,0.2); padding:8px 20px; border-radius:25px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <a href="/WebMaster/Dashboard" style="color:#00d2ff; text-decoration:none; display:inline-block; margin-bottom:1rem;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div style="background:rgba(220,53,69,0.2); border:1px solid #dc3545; color:#dc3545; padding:1rem; border-radius:10px; margin-bottom:1rem; text-align:center;">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <div class="welcome-card">
+            <h1 class="welcome-title"><i class="fas fa-shield-alt"></i> Role-Based Access Control (RBAC)</h1>
+            <p class="welcome-subtitle">Manage roles that control what each user can access in the system</p>
+        </div>
+
+        <!-- Create Role Form -->
+        <h2 class="section-title"><i class="fas fa-plus-circle"></i> Create New Role</h2>
+        <form method="post" action="/WebMaster/CreateRole" style="background:rgba(255,255,255,0.05); border-radius:20px; padding:2rem; margin-bottom:2rem;">
+            @Html.AntiForgeryToken()
+            <div style="display:flex; gap:1rem; align-items:flex-end;">
+                <div style="flex:1;">
+                    <label style="color:rgba(255,255,255,0.8); display:block; margin-bottom:0.5rem;">Role Name</label>
+                    <input type="text" name="RoleName" placeholder="e.g. Moderator" required
+                           style="width:100%; padding:0.75rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:15px; color:white;" />
+                </div>
+                <button type="submit" class="btn-action btn-primary" style="border:none; cursor:pointer; padding:0.75rem 2rem;">
+                    <i class="fas fa-plus"></i> Create Role
+                </button>
+            </div>
+        </form>
+
+        <!-- Roles Table -->
+        <h2 class="section-title"><i class="fas fa-list"></i> Existing Roles</h2>
+        @{
+            var roleUserCounts = (Dictionary<string, int>)ViewBag.RoleUserCounts;
+            var protectedRoles = new[] { "Admin", "Supervisor", "Student", "WebMaster" };
+        }
+        <div style="background:rgba(255,255,255,0.05); border-radius:20px; overflow:hidden;">
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:rgba(0,210,255,0.2);">
+                        <th style="color:white; padding:1rem; text-align:left;">Role Name</th>
+                        <th style="color:white; padding:1rem; text-align:left;">Users Assigned</th>
+                        <th style="color:white; padding:1rem; text-align:left;">Type</th>
+                        <th style="color:white; padding:1rem; text-align:left;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model)
+                    {
+                        var isProtected = protectedRoles.Contains(role.Name);
+                        var userCount = roleUserCounts.ContainsKey(role.Name!) ? roleUserCounts[role.Name!] : 0;
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                            <td style="color:white; padding:1rem; font-weight:600;">
+                                <i class="fas fa-shield-alt" style="color:#00d2ff; margin-right:0.5rem;"></i>
+                                @role.Name
+                            </td>
+                            <td style="color:rgba(255,255,255,0.8); padding:1rem;">@userCount user(s)</td>
+                            <td style="padding:1rem;">
+                                @if (isProtected)
+                                {
+                                    <span style="background:rgba(0,210,255,0.2); color:#00d2ff; padding:0.25rem 0.75rem; border-radius:50px; font-size:0.75rem;">
+                                        <i class="fas fa-lock"></i> System Role
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.6); padding:0.25rem 0.75rem; border-radius:50px; font-size:0.75rem;">
+                                        Custom
+                                    </span>
+                                }
+                            </td>
+                            <td style="padding:1rem;">
+                                @if (!isProtected)
+                                {
+                                    <form method="post" action="/WebMaster/DeleteRole" style="display:inline;"
+                                          onsubmit="return confirm('Delete role @role.Name? This cannot be undone.');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="RoleName" value="@role.Name" />
+                                        <button type="submit" style="background:rgba(220,53,69,0.2); border:1px solid #dc3545; color:#dc3545; padding:0.4rem 1rem; border-radius:25px; cursor:pointer;">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span style="color:rgba(255,255,255,0.3); font-size:0.85rem;">Protected</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- RBAC Explanation -->
+        <div style="background:rgba(0,210,255,0.05); border:1px solid rgba(0,210,255,0.2); border-radius:20px; padding:2rem; margin-top:2rem;">
+            <h3 style="color:#00d2ff; margin-bottom:1rem;"><i class="fas fa-info-circle"></i> RBAC in This System</h3>
+            <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                Each controller is protected with <code style="color:#00d2ff;">[Authorize(Roles = "RoleName")]</code> to ensure
+                users can only access pages relevant to their role. Students cannot access Supervisor or Admin dashboards, and vice versa.
+                System roles (Admin, Supervisor, Student, WebMaster) are protected and cannot be deleted.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
