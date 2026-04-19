@@ -1,0 +1,316 @@
+﻿@using PAS_Full_System.Models
+@model List<Match>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "My Matches | PAS";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+            .logo i {
+                background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+            .back-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.15), rgba(58, 123, 213, 0.15));
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d2ff;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .match-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+            .match-card:hover {
+                transform: translateY(-5px);
+                border-color: #00d2ff;
+            }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .match-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-revealed {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .info-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+            .confirm-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+            }
+
+        .revealed-info {
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 3px solid #28a745;
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            color: #28a745;
+        }
+
+            .revealed-info a {
+                color: #00d2ff;
+                text-decoration: none;
+                display: block;
+                margin-top: 0.5rem;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo"><i class="fas fa-handshake"></i><span>PAS | My Matches</span></div>
+            <a href="/Supervisor/Dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+        }
+
+        <div class="welcome-card">
+            <h1 class="welcome-title">🤝 Your Matches</h1>
+            <p>Review and confirm your project matches</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">@Model.Count(m => !m.IsIdentityRevealed)</div>
+                <div class="stat-label">Pending Confirmation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@Model.Count(m => m.IsIdentityRevealed)</div>
+                <div class="stat-label">Revealed Matches</div>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="fas fa-heart" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                <h3>No matches yet</h3>
+                <p>Browse projects and express interest in ones you like</p>
+                <a href="/Supervisor/BrowseProjects" style="color: #00d2ff;">Browse Projects →</a>
+            </div>
+        }
+        else
+        {
+            <div class="matches-grid">
+                @foreach (var match in Model)
+                {
+                    <div class="match-card">
+                        <div class="match-header">
+                            <h3 class="match-title">@match.Project?.Title</h3>
+                            <span class="status-badge @(match.IsIdentityRevealed ? "status-revealed" : "status-pending")">
+                                @(match.IsIdentityRevealed ? "✓ Revealed" : "⏳ Pending")
+                            </span>
+                        </div>
+
+                        <div class="info-text"><strong>Research Area:</strong> @match.Project?.ResearchArea?.Name</div>
+                        <div class="info-text"><strong>Tech Stack:</strong> @match.Project?.TechStack</div>
+                        <div class="info-text"><strong>Interested on:</strong> @match.MatchedAt.ToString("MMM dd, yyyy")</div>
+
+                        @if (!match.IsIdentityRevealed)
+                        {
+                            <form method="post" asp-action="ConfirmMatch">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="matchId" value="@match.MatchId" />
+                                <button type="submit" class="confirm-btn">
+                                    <i class="fas fa-eye"></i> Confirm & Reveal Student Identity
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="revealed-info">
+                                <i class="fas fa-user-check"></i> Student details revealed!
+                                <a href="/SupervisorMatch/ProjectDetails/@match.ProjectId">
+                                    View Student Information →
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>

@@ -1,0 +1,348 @@
+﻿@using PAS_Full_System.Models
+@model PAS_Full_System.Models.Project
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Project Details | PAS";
+
+    var supervisor = ViewBag.Supervisor as ApplicationUser;
+    var isRevealed = ViewBag.IsRevealed != null && (bool)ViewBag.IsRevealed;
+    var availableSlots = ViewBag.AvailableSlots as List<SupervisorAvailability> ?? new List<SupervisorAvailability>();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 2rem;
+            color: white;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            color: #00d2ff;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .reveal-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .section-title {
+            color: #00d2ff;
+            font-size: 1.15rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .info-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .label {
+            width: 180px;
+            opacity: 0.75;
+            font-weight: 600;
+        }
+
+        .value {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-matched {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .status-review {
+            background: rgba(0, 210, 255, 0.2);
+            color: #00d2ff;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 999px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .file-link {
+            color: #00d2ff;
+            text-decoration: none;
+        }
+
+            .file-link:hover {
+                text-decoration: underline;
+            }
+
+        .actions {
+            margin-top: 2rem;
+        }
+
+        .slot-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            overflow: hidden;
+            border-radius: 18px;
+        }
+
+            .slot-table th,
+            .slot-table td {
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                text-align: left;
+            }
+
+            .slot-table th {
+                background: rgba(0, 210, 255, 0.15);
+            }
+
+        .empty-box {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 16px;
+            color: rgba(255,255,255,0.8);
+            margin-top: 1rem;
+        }
+
+        .btn-book {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 999px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <a href="/Student/MyProjects" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to My Projects
+        </a>
+
+        <div class="card">
+            @if (Model.Status == "Matched")
+            {
+                <div class="reveal-badge">
+                    <i class="fas fa-handshake"></i> Project Matched
+                </div>
+            }
+
+            <h1>@Model.Title</h1>
+
+            <div class="section-title">
+                <i class="fas fa-info-circle"></i> Project Details
+            </div>
+
+            <div class="info-row">
+                <span class="label">Status:</span>
+                <span class="value">
+                    @if (Model.Status == "Pending")
+                    {
+                        <span class="status-badge status-pending">Pending</span>
+                    }
+                    else if (Model.Status == "Matched")
+                    {
+                        <span class="status-badge status-matched">Matched</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge status-review">@Model.Status</span>
+                    }
+                </span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Abstract:</span>
+                <span class="value">@Model.Abstract</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Tech Stack:</span>
+                <span class="value">@Model.TechStack</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Research Area:</span>
+                <span class="value">@Model.ResearchArea?.Name</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Submitted:</span>
+                <span class="value">@Model.CreatedAt.ToString("MMMM dd, yyyy")</span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.GroupMemberNames))
+            {
+                <div class="section-title">
+                    <i class="fas fa-users"></i> Group Members
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Member Names:</span>
+                    <span class="value">@Model.GroupMemberNames</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Student IDs:</span>
+                    <span class="value">@Model.GroupMemberIds</span>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.ProposalFileName))
+            {
+                <div class="section-title">
+                    <i class="fas fa-file-alt"></i> Proposal Document
+                </div>
+
+                <div class="info-row">
+                    <span class="label">File:</span>
+                    <span class="value">
+                        <a href="@Model.ProposalFilePath" target="_blank" class="file-link">
+                            <i class="fas fa-download"></i> @Model.ProposalFileName
+                        </a>
+                    </span>
+                </div>
+            }
+
+            @if (isRevealed && supervisor != null)
+            {
+                <div class="section-title">
+                    <i class="fas fa-chalkboard-user"></i> Supervisor Details
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Supervisor Name:</span>
+                    <span class="value">@supervisor.FullName</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Email:</span>
+                    <span class="value">@supervisor.Email</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Department:</span>
+                    <span class="value">@supervisor.Department</span>
+                </div>
+
+                <div class="section-title">
+                    <i class="fas fa-clock"></i> Available Time Slots
+                </div>
+
+                @if (availableSlots.Any())
+                {
+                    <table class="slot-table">
+                        <thead>
+                            <tr>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var slot in availableSlots)
+                            {
+                                <tr>
+                                    <td>@slot.StartTime.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                    <td>@slot.EndTime.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                    <td>
+                                        <form asp-controller="Availability" asp-action="ConfirmBooking" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="availabilityId" value="@slot.Id" />
+                                            <input type="hidden" name="projectId" value="@Model.ProjectId" />
+                                            <button type="submit" class="btn-book">Book Slot</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="empty-box">
+                        No available time slots added yet by the supervisor.
+                    </div>
+                }
+            }
+
+            @if (!isRevealed)
+            {
+                <div class="section-title">
+                    <i class="fas fa-user-secret"></i> Supervisor Details
+                </div>
+
+                <div class="empty-box">
+                    Supervisor details and time slots will appear after the match is confirmed and identity is revealed.
+                </div>
+            }
+
+            @if (Model.Status == "Pending")
+            {
+                <div class="section-title">
+                    <i class="fas fa-edit"></i> Actions
+                </div>
+
+                <div class="actions">
+                    <a href="/Student/EditProject/@Model.ProjectId" class="btn-edit">
+                        <i class="fas fa-pencil-alt"></i> Edit Project
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>
