@@ -1,0 +1,126 @@
+﻿/* Identity Pages Styling - Match Supervisor Dashboard */
+body {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e) !important;
+    font-family: 'Inter', sans-serif !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card styling */
+.card, .login-card, .register-card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 30px !important;
+    padding: 2rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #00d2ff, #3a7bd5) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
+    }
+
+/* Form inputs */
+.form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 15px !important;
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+}
+
+    .form-control:focus {
+        border-color: #00d2ff !important;
+        box-shadow: none !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+/* Labels */
+label {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
+    color: white !important;
+}
+
+/* Text */
+.text-muted, p {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Navbar */
+.navbar {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+}
+
+    .navbar-brand:hover, .nav-link:hover {
+        color: #00d2ff !important;
+    }
+
+/* Links */
+a {
+    color: #00d2ff !important;
+    text-decoration: none !important;
+}
+
+    a:hover {
+        color: #3a7bd5 !important;
+    }
+
+/* Checkbox */
+.form-check-input {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+    .form-check-input:checked {
+        background-color: #00d2ff !important;
+        border-color: #00d2ff !important;
+    }
+
+/* Validation errors */
+.text-danger, .validation-message {
+    color: #ff6b6b !important;
+    font-size: 0.8rem !important;
+}
+
+/* Container */
+.container {
+    max-width: 500px !important;
+    margin: 0 auto !important;
+}
+
+/* Footer */
+footer {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    text-align: center !important;
+    padding: 1rem !important;
+    margin-top: 2rem !important;
+}
