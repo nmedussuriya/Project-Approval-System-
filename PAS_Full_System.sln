@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35806.99 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PAS_Full_System", "PAS_Full_System.csproj", "{12A35595-0923-980C-55E9-F698743FAE79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12A35595-0923-980C-55E9-F698743FAE79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12A35595-0923-980C-55E9-F698743FAE79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12A35595-0923-980C-55E9-F698743FAE79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12A35595-0923-980C-55E9-F698743FAE79}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C808E47-DCF4-484A-ACFC-FA1D81A91FE6}
+	EndGlobalSection
+EndGlobal

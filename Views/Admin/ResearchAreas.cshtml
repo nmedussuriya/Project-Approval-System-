@@ -1,0 +1,207 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Research Areas | Admin";
+}
+@model List<PAS_Full_System.Models.ResearchArea>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+            .logo i {
+                color: #00d2ff;
+            }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.15), rgba(58, 123, 213, 0.15));
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00d2ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+            .data-table th {
+                background: rgba(0, 210, 255, 0.2);
+                color: white;
+                padding: 1rem;
+                text-align: left;
+            }
+
+            .data-table td {
+                color: rgba(255, 255, 255, 0.8);
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #333;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-right: 0.5rem;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo"><i class="fas fa-tags"></i><span>PAS | Research Areas</span></div>
+            <div class="user-info">
+                <span>Admin</span>
+                <div class="avatar"><i class="fas fa-user"></i></div>
+                <a href="/Auth/Logout" style="color:white; background:rgba(255,255,255,0.2); padding:8px 20px; border-radius:25px;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+        }
+
+        <div class="welcome-card">
+            <h1 class="welcome-title">Research Areas Management</h1>
+            <p>Manage research areas for project categorization</p>
+        </div>
+
+        <a href="/Admin/CreateResearchArea" class="btn-primary"><i class="fas fa-plus"></i> Add New Research Area</a>
+        <a href="/Admin/Dashboard" class="btn-primary" style="background:rgba(255,255,255,0.2); margin-left:1rem;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+
+        <table class="data-table">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Description</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var area in Model)
+                {
+                    <tr>
+                        <td>@area.ResearchAreaId</td>
+                        <td>@area.Name</td>
+                        <td>@area.Description</td>
+                        <td>
+                            <a href="/Admin/EditResearchArea/@area.ResearchAreaId" class="btn-edit">Edit</a>
+                            <form method="post" action="/Admin/DeleteResearchArea/@area.ResearchAreaId" style="display:inline;">
+                                <button type="submit" class="btn-delete" onclick="return confirm('Delete this research area?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Project Details | Student Revealed";
+}
+@model PAS_Full_System.Models.Project
+
+@{
+    var student = ViewBag.Student as ApplicationUser;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .reveal-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: #00d2ff;
+            margin: 1.5rem 0 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 0.75rem;
+            color: white;
+            flex-wrap: wrap;
+        }
+
+        .label {
+            width: 120px;
+            opacity: 0.7;
+            font-weight: 500;
+        }
+
+        .value {
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+            .btn-back:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+            }
+
+        hr {
+            border-color: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .group-member {
+            background: rgba(0, 210, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="reveal-badge">
+                <i class="fas fa-eye"></i> Identity Revealed
+            </div>
+            <h1>📋 Project & Student Details</h1>
+            <hr>
+
+            <h3>📁 Project Information</h3>
+            <div class="info-row">
+                <span class="label">Title:</span>
+                <span class="value">@Model.Title</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Abstract:</span>
+                <span class="value">@Model.Abstract</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Tech Stack:</span>
+                <span class="value">@Model.TechStack</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Research Area:</span>
+                <span class="value">@Model.ResearchArea?.Name</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Status:</span>
+                <span class="value">@Model.Status</span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.GroupMemberNames))
+            {
+                <h3>👥 Group Members</h3>
+                <div class="info-row">
+                    <span class="label">Names:</span>
+                    <span class="value">@Model.GroupMemberNames</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Student IDs:</span>
+                    <span class="value">@Model.GroupMemberIds</span>
+                </div>
+            }
+
+            <h3>👨‍🎓 Student Information <span style="color: #28a745; font-size: 0.8rem;">(Now Revealed)</span></h3>
+            <div class="info-row">
+                <span class="label">Full Name:</span>
+                <span class="value">@(student?.FullName ?? "Not available")</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Student ID:</span>
+                <span class="value">@(student?.StudentId ?? "Not available")</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value">@(student?.Email ?? "Not available")</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Department:</span>
+                <span class="value">@(student?.Department ?? "Not specified")</span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ProposalFileName))
+            {
+                <h3>📄 Proposal Document</h3>
+                <div class="info-row">
+                    <span class="label">File:</span>
+                    <span class="value">
+                        <a href="@Model.ProposalFilePath" target="_blank" style="color: #00d2ff;">@Model.ProposalFileName</a>
+                    </span>
+                </div>
+            }
+
+            <a href="/SupervisorMatch/MyMatches" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Matches
+            </a>
+        </div>
+    </div>
+</body>
+</html>
