@@ -1,0 +1,121 @@
+﻿@model List<PAS_Full_System.Models.Project>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "My Projects | PAS";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0b0f2f, #1c1f4a, #2b2d6e);
+            min-height: 100vh;
+            padding: 2rem;
+            color: white;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .top-link {
+            color: #00d2ff;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .project-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-row {
+            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .btn-view {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            background: rgba(255,255,255,0.08);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/Student/Dashboard" class="top-link">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <h1 class="page-title">My Projects</h1>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <p>No projects found yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="projects-grid">
+                @foreach (var project in Model)
+                {
+                    <div class="project-card">
+                        <div class="project-title">@project.Title</div>
+
+                        <div class="info-row"><strong>Status:</strong> @project.Status</div>
+                        <div class="info-row"><strong>Research Area:</strong> @project.ResearchArea?.Name</div>
+                        <div class="info-row"><strong>Created:</strong> @project.CreatedAt.ToString("dd MMM yyyy")</div>
+
+                        <a href="/StudentMatch/ProjectDetails/@project.ProjectId" class="btn-view">
+                            View Details
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>

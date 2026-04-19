@@ -1,0 +1,117 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Student Dashboard | PAS";
+}
+@model List<PAS_Full_System.Models.Project>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>PAS | Student Portal</span>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user-graduate"></i>
+                <span>Student</span>
+                <a href="/Profile/Index" class="avatar" style="text-decoration:none; color:white;">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="/Auth/Logout" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 25px; margin-left: 15px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+
+        <div class="welcome-card">
+            <h1 class="welcome-title">Welcome, Student!</h1>
+            <p class="welcome-subtitle">Submit your research proposals and track their status</p>
+        </div>
+
+        <div class="stats-grid">
+            <a href="/Student/CreateProject" class="stat-card">
+                <div class="stat-icon"><i class="fas fa-plus-circle"></i></div>
+                <div class="stat-value">+ New</div>
+                <div class="stat-label">Create Project</div>
+            </a>
+            <a href="/Student/MyProjects" class="stat-card">
+                <div class="stat-icon"><i class="fas fa-folder-open"></i></div>
+                <div class="stat-value">@Model.Count</div>
+                <div class="stat-label">My Projects</div>
+            </a>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-value">@Model.Count(p => p.Status == "Pending")</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/Student/CreateProject" class="btn-action btn-primary">
+                <i class="fas fa-plus"></i> Submit New Project
+            </a>
+            <a href="/Student/MyProjects" class="btn-action btn-secondary">
+                <i class="fas fa-list"></i> View All Projects
+            </a>
+        </div>
+
+        <div class="section-title">
+            <i class="fas fa-clock"></i> Recent Projects
+        </div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="empty-state">
+                <i class="fas fa-inbox" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                <h3>No projects yet</h3>
+                <p>Click "Submit New Project" to get started</p>
+            </div>
+        }
+        else
+        {
+            <table class="projects-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Research Area</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in Model.Take(5))
+                    {
+                        <tr>
+                            <td>@project.Title</td>
+                            <td>@(project.ResearchArea?.Name ?? "N/A")</td>
+                            <td><span class="status-badge status-pending">@project.Status</span></td>
+                            <td>@project.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td><a href="/StudentMatch/ProjectDetails/@project.ProjectId" style="color: #00d2ff;">View →</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</body>
+</html>

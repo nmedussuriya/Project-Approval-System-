@@ -1,0 +1,195 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Edit Project | PAS";
+}
+@model PAS_Full_System.Models.Project
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 2rem;
+            color: white;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-link {
+            color: #00d2ff;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            color: #00d2ff;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+            select option {
+                background-color: #1c1f4a;
+                color: white;
+            }
+
+        .actions {
+            margin-top: 2rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            color: white;
+            display: inline-block;
+        }
+
+        .validation-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 0.35rem;
+            display: block;
+        }
+
+        .text-muted {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <a href="/Student/MyProjects" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to My Projects
+    </a>
+
+    <div class="form-container">
+        <h1>Edit Project</h1>
+
+        <form asp-action="EditProject" asp-route-id="@Model.ProjectId" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div class="section-title">
+                <i class="fas fa-info-circle"></i> Project Details
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Title">Project Title</label>
+                <input asp-for="Title" required />
+                <span asp-validation-for="Title" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Abstract">Abstract / Description</label>
+                <textarea asp-for="Abstract" rows="4" required></textarea>
+                <span asp-validation-for="Abstract" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TechStack">Tech Stack (comma separated)</label>
+                <input asp-for="TechStack" required />
+                <span asp-validation-for="TechStack" class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ResearchAreaId">Research Area</label>
+                <select asp-for="ResearchAreaId" asp-items="ViewBag.ResearchAreas" required>
+                    <option value="">-- Select Research Area --</option>
+                </select>
+                <span asp-validation-for="ResearchAreaId" class="validation-message"></span>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-users"></i> Group Members
+            </div>
+
+            <div class="form-group">
+                <label>Group Member Names (comma separated)</label>
+                <input name="GroupMemberNames" value="@Model.GroupMemberNames" placeholder="e.g., John Doe, Jane Smith" />
+                <small class="text-muted">Only visible to Supervisor after match confirmation</small>
+            </div>
+
+            <div class="form-group">
+                <label>Group Member Student IDs (comma separated)</label>
+                <input name="GroupMemberIds" value="@Model.GroupMemberIds" placeholder="e.g., STU-001, STU-002" />
+                <small class="text-muted">Only visible to Supervisor after match confirmation</small>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-file-upload"></i> Proposal Document
+            </div>
+
+            <div class="form-group">
+                <label>Upload New Proposal (optional)</label>
+                <input type="file" name="ProposalFile" accept=".pdf,.doc,.docx" />
+                @if (!string.IsNullOrEmpty(Model.ProposalFileName))
+                {
+                    <small class="text-muted">Current file: @Model.ProposalFileName</small>
+                }
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+
+                <a href="/Student/MyProjects" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>
