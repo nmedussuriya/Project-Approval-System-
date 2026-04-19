@@ -1,0 +1,402 @@
+﻿@model List<PAS_Full_System.Models.Project>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Supervisor Dashboard | Blind Match";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                background: rgba(255, 255, 255, 0.1);
+                border-color: #00d2ff;
+            }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+            .stat-icon i {
+                font-size: 1.8rem;
+                color: white;
+            }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
+            }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blind-badge {
+            display: inline-block;
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            color: #ffc107;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .alert-error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .nav-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+            .logo i {
+                color: #00d2ff;
+            }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            padding: 2rem 4rem;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.15), rgba(58, 123, 213, 0.15));
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00d2ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-eye-slash"></i>
+                <span>PAS | Blind Match</span>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user-shield"></i>
+                <span>Supervisor</span>
+                <a href="/Profile/Index" class="avatar" style="text-decoration:none; color:white;">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="/Auth/Logout" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 25px; margin-left: 15px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-error">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <div class="welcome-card">
+            <h1 class="welcome-title">Welcome back, Supervisor</h1>
+            <p class="welcome-subtitle">Review anonymous projects and find the perfect match for your expertise</p>
+            <div class="blind-badge">
+                <i class="fas fa-mask"></i> BLIND MATCHING MODE ACTIVE — Student identities are hidden
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <a href="/Supervisor/BrowseProjects" class="stat-card">
+                <div class="stat-icon"><i class="fas fa-folder-open"></i></div>
+                <div class="stat-value">@ViewBag.PendingCount</div>
+                <div class="stat-label">Pending Projects</div>
+            </a>
+            <a href="/SupervisorMatch/MyMatches" class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-value">@ViewBag.MyInterests</div>
+                <div class="stat-label">Interests Expressed</div>
+            </a>
+            <a href="/SupervisorMatch/MyMatches" class="stat-card">
+                <div class="stat-icon"><i class="fas fa-handshake"></i></div>
+                <div class="stat-value">@ViewBag.ConfirmedMatches</div>
+                <div class="stat-label">Confirmed Matches</div>
+            </a>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/Supervisor/BrowseProjects" class="btn-action btn-primary">
+                <i class="fas fa-search"></i> Browse Anonymous Projects
+            </a>
+
+            <a href="/SupervisorMatch/MyMatches" class="btn-action btn-secondary">
+                <i class="fas fa-users"></i> My Matches
+            </a>
+
+            <a asp-controller="Availability"
+               asp-action="MySlots"
+               class="btn-action btn-primary">
+                <i class="fas fa-clock"></i> Manage Availability
+            </a>
+        </div>
+
+        <div class="section-title">
+            <i class="fas fa-project-diagram"></i>
+            Available Projects for Review
+            <span class="blind-badge" style="font-size: 0.7rem;">Blind Review</span>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="fas fa-inbox" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                <h3>No projects available</h3>
+                <p>Check back later for new project submissions</p>
+            </div>
+        }
+        else
+        {
+            <div class="projects-grid">
+                @foreach (var project in Model)
+                {
+                    <div class="project-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <h3 style="color: white;">@project.Title</h3>
+                            <span class="status-badge status-pending">@project.ResearchArea?.Name</span>
+                        </div>
+
+                        <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">@project.Abstract</p>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                            @foreach (var tech in (project.TechStack ?? "").Split(','))
+                            {
+                                if (!string.IsNullOrWhiteSpace(tech))
+                                {
+                                    <span style="background: rgba(255,255,255,0.1); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; color: white;">@tech.Trim()</span>
+                                }
+                            }
+                        </div>
+
+                        <div class="blind-notice" style="background: rgba(255,193,7,0.1); border-left: 3px solid #ffc107; padding: 0.5rem; margin: 1rem 0; font-size: 0.8rem; color: #ffc107;">
+                            <i class="fas fa-user-secret"></i> Student identity hidden — evaluate on merit only
+                        </div>
+
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                            <a href="/SupervisorMatch/ProjectDetails/@project.ProjectId"
+                               class="btn-action btn-secondary"
+                               style="flex:1; justify-content:center; padding: 0.75rem 1rem;">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+
+                            <form method="post" asp-controller="SupervisorMatch" asp-action="ExpressInterest" style="flex:1;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="projectId" value="@project.ProjectId" />
+                                <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem; border-radius: 50px;">
+                                    Express Interest
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>
