@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PAS_Full_System.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="user-menu">
+        <span style="color: white;">Hello, @UserManager.GetUserName(User)</span>
+        <form asp-area="Identity" asp-page="/Account/Logout" method="post" id="logoutForm">
+            <button type="submit" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 20px; border-radius: 25px; cursor: pointer;">Logout</button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="auth-buttons">
+        <a href="/Identity/Account/Register" class="btn-register">Register</a>
+        <a href="/Identity/Account/Login" class="btn-login">Login</a>
+    </div>
+}
