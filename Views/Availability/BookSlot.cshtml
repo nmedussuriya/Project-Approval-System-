@@ -1,0 +1,162 @@
+﻿@model IEnumerable<PAS_Full_System.Models.SupervisorAvailability>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Book Time Slot | PAS";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem 2rem;
+        }
+
+        .back-link {
+            color: #00d2ff;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .page-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.12), rgba(58, 123, 213, 0.12));
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #00d2ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1rem;
+        }
+
+        .table-box {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slots-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+            .slots-table th {
+                background: rgba(0, 210, 255, 0.18);
+                color: white;
+                padding: 1rem;
+                text-align: left;
+            }
+
+            .slots-table td {
+                padding: 1rem;
+                color: rgba(255, 255, 255, 0.85);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+        .btn-book {
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+            .btn-book:hover {
+                transform: translateY(-2px);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.65);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <a href="/Student/MyProjects" class="back-link">← Back to My Projects</a>
+
+        <div class="page-card">
+            <h1 class="page-title">Book Supervisor Time Slot</h1>
+            <p class="page-subtitle">Choose an available meeting time after the blind-match identity reveal.</p>
+        </div>
+
+        <div class="table-box">
+            @if (!Model.Any())
+            {
+                <div class="empty-state">
+                    <h3>No available slots found</h3>
+                    <p>The supervisor has not added any open time slots yet.</p>
+                </div>
+            }
+            else
+            {
+                <table class="slots-table">
+                    <thead>
+                        <tr>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var slot in Model)
+                        {
+                            <tr>
+                                <td>@slot.StartTime.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                <td>@slot.EndTime.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                <td>
+                                    <form asp-action="ConfirmBooking" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="availabilityId" value="@slot.Id" />
+                                        <input type="hidden" name="projectId" value="@ViewBag.ProjectId" />
+                                        <button type="submit" class="btn-book">Book Slot</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</body>
+</html>
