@@ -1,0 +1,123 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "WebMaster Dashboard | PAS";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo"><i class="fas fa-server"></i><span>PAS | WebMaster Portal</span></div>
+            <div class="user-info">
+                <span>WebMaster</span>
+                <div class="avatar"><i class="fas fa-user-shield"></i></div>
+                <a href="/Auth/Logout" style="color:white; background:rgba(255,255,255,0.2); padding:8px 20px; border-radius:25px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div style="background:rgba(220,53,69,0.2); border:1px solid #dc3545; color:#dc3545; padding:1rem; border-radius:10px; margin-bottom:1rem; text-align:center;">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <div class="welcome-card">
+            <h1 class="welcome-title"><i class="fas fa-server"></i> WebMaster Dashboard</h1>
+            <p class="welcome-subtitle">Infrastructure management, database versioning, and security configurations</p>
+        </div>
+
+        <!-- System Stats -->
+        <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-value">@ViewBag.TotalUsers</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="stat-value">@ViewBag.TotalRoles</div>
+                <div class="stat-label">Roles Defined</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="stat-value" style="color: @(ViewBag.DbStatus == "Connected" ? "#28a745" : "#dc3545");">
+                    @ViewBag.DbStatus
+                </div>
+                <div class="stat-label">Database Status</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <div class="stat-value">@ViewBag.AppliedMigrations</div>
+                <div class="stat-label">Applied Migrations</div>
+            </div>
+        </div>
+
+        <!-- Navigation Actions -->
+        <div class="action-buttons">
+            <a href="/WebMaster/EnvironmentConfig" class="btn-action btn-primary">
+                <i class="fas fa-cogs"></i> Environment Config
+            </a>
+            <a href="/WebMaster/DatabaseVersioning" class="btn-action btn-primary">
+                <i class="fas fa-database"></i> Database Versioning
+            </a>
+            <a href="/WebMaster/RoleManagement" class="btn-action btn-primary">
+                <i class="fas fa-shield-alt"></i> RBAC / Roles
+            </a>
+            <a href="/WebMaster/SecurityOverview" class="btn-action btn-primary">
+                <i class="fas fa-lock"></i> Security Overview
+            </a>
+        </div>
+
+        <!-- Pending Migrations Warning -->
+        @if (ViewBag.PendingMigrations > 0)
+        {
+            <div style="background:rgba(255,193,7,0.15); border:1px solid #ffc107; color:#ffc107; padding:1rem; border-radius:15px; margin-bottom:2rem;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>@ViewBag.PendingMigrations pending migration(s) detected.</strong>
+                Run <code>dotnet ef database update</code> in your terminal to apply them.
+                <a href="/WebMaster/DatabaseVersioning" style="color:#ffc107; text-decoration:underline; margin-left:1rem;">View Details →</a>
+            </div>
+        }
+
+        <!-- Quick Info Cards -->
+        <h2 class="section-title"><i class="fas fa-info-circle"></i> System Summary</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+            <div class="stat-card" style="text-align:left;">
+                <h3 style="color:#00d2ff; margin-bottom:1rem;"><i class="fas fa-folder-open"></i> Projects</h3>
+                <p style="color:rgba(255,255,255,0.7);">Total projects in system: <strong style="color:white;">@ViewBag.TotalProjects</strong></p>
+                <p style="color:rgba(255,255,255,0.7); margin-top:0.5rem;">Total matches made: <strong style="color:white;">@ViewBag.TotalMatches</strong></p>
+            </div>
+            <div class="stat-card" style="text-align:left;">
+                <h3 style="color:#00d2ff; margin-bottom:1rem;"><i class="fas fa-shield-alt"></i> RBAC Status</h3>
+                <p style="color:rgba(255,255,255,0.7);">Roles configured: <strong style="color:white;">@ViewBag.TotalRoles</strong></p>
+                <p style="color:rgba(255,255,255,0.7); margin-top:0.5rem;">
+                    Access control: <strong style="color:#28a745;">Active</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
