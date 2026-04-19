@@ -1,0 +1,124 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Environment Config | PAS";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo"><i class="fas fa-server"></i><span>PAS | WebMaster Portal</span></div>
+            <div class="user-info">
+                <a href="/Auth/Logout" style="color:white; background:rgba(255,255,255,0.2); padding:8px 20px; border-radius:25px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <a href="/WebMaster/Dashboard" style="color:#00d2ff; text-decoration:none; display:inline-block; margin-bottom:1rem;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="welcome-card">
+            <h1 class="welcome-title"><i class="fas fa-cogs"></i> Environment Configuration</h1>
+            <p class="welcome-subtitle">ASP.NET Core environment setup and SQL Server connectivity status</p>
+        </div>
+
+        <!-- Environment Info -->
+        <h2 class="section-title"><i class="fas fa-laptop-code"></i> Runtime Environment</h2>
+        <div style="background:rgba(255,255,255,0.05); border-radius:20px; overflow:hidden; margin-bottom:2rem;">
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:rgba(0,210,255,0.2);">
+                        <th style="color:white; padding:1rem; text-align:left;">Property</th>
+                        <th style="color:white; padding:1rem; text-align:left;">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="color:rgba(255,255,255,0.6); padding:1rem;"><i class="fas fa-code"></i> Framework</td>
+                        <td style="color:white; padding:1rem;">@ViewBag.DotnetVersion</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="color:rgba(255,255,255,0.6); padding:1rem;"><i class="fas fa-desktop"></i> Operating System</td>
+                        <td style="color:white; padding:1rem;">@ViewBag.OSVersion</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="color:rgba(255,255,255,0.6); padding:1rem;"><i class="fas fa-leaf"></i> ASPNETCORE_ENVIRONMENT</td>
+                        <td style="padding:1rem;">
+                            <span style="background:rgba(40,167,69,0.2); color:#28a745; padding:0.25rem 0.75rem; border-radius:50px; font-size:0.85rem;">
+                                @ViewBag.Environment
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="color:rgba(255,255,255,0.6); padding:1rem;"><i class="fas fa-tag"></i> Application Name</td>
+                        <td style="color:white; padding:1rem;">@ViewBag.AppName</td>
+                    </tr>
+                    <tr>
+                        <td style="color:rgba(255,255,255,0.6); padding:1rem;"><i class="fas fa-clock"></i> Server Time</td>
+                        <td style="color:white; padding:1rem;">@ViewBag.ServerTime</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SQL Server Connectivity -->
+        <h2 class="section-title"><i class="fas fa-database"></i> SQL Server Connectivity</h2>
+        <div style="background:rgba(255,255,255,0.05); border-radius:20px; padding:2rem; margin-bottom:2rem;">
+            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:1.5rem;">
+                <div style="background:rgba(0,210,255,0.1); border:1px solid rgba(0,210,255,0.3); border-radius:15px; padding:1.5rem;">
+                    <h3 style="color:#00d2ff; margin-bottom:1rem;"><i class="fas fa-plug"></i> Connection Type</h3>
+                    <p style="color:rgba(255,255,255,0.8);">SQL Server LocalDB (MSSQLLocalDB)</p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.85rem; margin-top:0.5rem;">Configured via appsettings.json</p>
+                </div>
+                <div style="background:rgba(40,167,69,0.1); border:1px solid rgba(40,167,69,0.3); border-radius:15px; padding:1.5rem;">
+                    <h3 style="color:#28a745; margin-bottom:1rem;"><i class="fas fa-check-circle"></i> ORM</h3>
+                    <p style="color:rgba(255,255,255,0.8);">Entity Framework Core</p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.85rem; margin-top:0.5rem;">Code-First with Migrations</p>
+                </div>
+                <div style="background:rgba(255,193,7,0.1); border:1px solid rgba(255,193,7,0.3); border-radius:15px; padding:1.5rem;">
+                    <h3 style="color:#ffc107; margin-bottom:1rem;"><i class="fas fa-id-card"></i> Identity Provider</h3>
+                    <p style="color:rgba(255,255,255,0.8);">ASP.NET Core Identity</p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.85rem; margin-top:0.5rem;">ApplicationUser extends IdentityUser</p>
+                </div>
+                <div style="background:rgba(58,123,213,0.1); border:1px solid rgba(58,123,213,0.3); border-radius:15px; padding:1.5rem;">
+                    <h3 style="color:#3a7bd5; margin-bottom:1rem;"><i class="fas fa-lock"></i> Authentication</h3>
+                    <p style="color:rgba(255,255,255,0.8);">Cookie-based Auth</p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.85rem; margin-top:0.5rem;">Role-Based Access Control (RBAC)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup Commands Reference -->
+        <h2 class="section-title"><i class="fas fa-terminal"></i> Setup Commands Reference</h2>
+        <div style="background:rgba(0,0,0,0.4); border-radius:20px; padding:2rem; font-family:monospace;">
+            <p style="color:#ffc107; margin-bottom:0.5rem;"># Restore NuGet packages</p>
+            <p style="color:#28a745; margin-bottom:1rem;">dotnet restore</p>
+
+            <p style="color:#ffc107; margin-bottom:0.5rem;"># Apply EF Core migrations</p>
+            <p style="color:#28a745; margin-bottom:1rem;">dotnet ef database update</p>
+
+            <p style="color:#ffc107; margin-bottom:0.5rem;"># Add a new migration</p>
+            <p style="color:#28a745; margin-bottom:1rem;">dotnet ef migrations add MigrationName</p>
+
+            <p style="color:#ffc107; margin-bottom:0.5rem;"># Check LocalDB status</p>
+            <p style="color:#28a745; margin-bottom:1rem;">sqllocaldb info</p>
+
+            <p style="color:#ffc107; margin-bottom:0.5rem;"># Run the application</p>
+            <p style="color:#28a745;">dotnet run</p>
+        </div>
+    </div>
+</body>
+</html>
