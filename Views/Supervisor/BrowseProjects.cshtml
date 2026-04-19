@@ -1,0 +1,336 @@
+﻿@using PAS_Full_System.Models
+@model List<Project>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Browse Projects | Blind Review";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+            .logo i {
+                background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+            .back-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.15), rgba(58, 123, 213, 0.15));
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .blind-badge {
+            display: inline-block;
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            color: #ffc107;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+            .project-card:hover {
+                transform: translateY(-5px);
+                border-color: #00d2ff;
+            }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .area-badge {
+            background: linear-gradient(135deg, #00d2ff20, #3a7bd520);
+            color: #00d2ff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+        }
+
+        .project-abstract {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .blind-notice {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 3px solid #ffc107;
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-size: 0.8rem;
+            color: #ffc107;
+        }
+
+        .interest-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .interest-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .alert-error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .details-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+            .details-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+        .interest-form {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo"><i class="fas fa-search"></i><span>PAS | Browse Projects</span></div>
+            <a href="/Supervisor/Dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-success"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-error"><i class="fas fa-exclamation-circle"></i> @TempData["Error"]</div>
+        }
+
+        <div class="welcome-card">
+            <h1 class="welcome-title">🔍 Browse Anonymous Projects</h1>
+            <p>Review projects based on technical merit. Student identities are hidden.</p>
+            <div class="blind-badge"><i class="fas fa-mask"></i> BLIND MATCHING MODE — Identity Hidden</div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="fas fa-folder-open" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                <h3>No projects available</h3>
+                <p>Check back later for new project submissions</p>
+            </div>
+        }
+        else
+        {
+            <div class="projects-grid">
+                @foreach (var project in Model)
+                {
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-title">@project.Title</h3>
+                            <span class="area-badge">@project.ResearchArea?.Name</span>
+                        </div>
+
+                        <p class="project-abstract">@project.Abstract</p>
+
+                        <div class="tech-stack">
+                            @if (!string.IsNullOrEmpty(project.TechStack))
+                            {
+                                foreach (var tech in project.TechStack.Split(','))
+                                {
+                                    if (!string.IsNullOrWhiteSpace(tech))
+                                    {
+                                        <span class="tech-tag">@tech.Trim()</span>
+                                    }
+                                }
+                            }
+                        </div>
+
+                        <div class="blind-notice">
+                            <i class="fas fa-user-secret"></i> Student identity hidden — evaluate on merit only
+                        </div>
+
+                        <div class="action-row">
+                            <a href="/SupervisorMatch/ProjectDetails/@project.ProjectId" class="details-btn">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+
+                            <form method="post" asp-controller="SupervisorMatch" asp-action="ExpressInterest" class="interest-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="projectId" value="@project.ProjectId" />
+                                <button type="submit" class="interest-btn">
+                                    <i class="fas fa-heart"></i> Express Interest
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>
